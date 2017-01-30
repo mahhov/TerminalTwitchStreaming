@@ -9,11 +9,12 @@ except:
 sums = []
 def printChannels(query = "dota2"):
     print(" -- page {} --".format(page + 1))
-    streams = v3.search.streams('dota2', 30, page * 30)['streams']
+    streams = v3.search.streams('dota2', 15, page * 15)['streams']
     for i, stream in enumerate(streams):
-    	sum = [i + 1, stream["channel"]["display_name"], stream["viewers"], stream["channel"]["url"]]
-    	sums.append(sum)
-    	print("{}   :   {}  ({})".format(sum[0], sum[1], sum[2]));
+        sum = [i + 1, stream["channel"]["display_name"], stream["viewers"], stream["channel"]["url"]]
+        sums.append(sum)
+        print("{}   :   {}  ({})".format(sum[0], sum[1], sum[2]))
+        #print("      {}".format(sum[3]))
     sys.stdout.flush()
 
 def gotoChannel(selection):
@@ -21,7 +22,7 @@ def gotoChannel(selection):
         return
     selSum = sums[selection]
     print('going to {}'.format(selSum[1]))
-    execute = "streamlink np 'omxplayer' twtich.tv/{} best".format(selSum[3]) 
+    execute = "streamlink -np 'omxplayer' '{}' best".format(selSum[3]) 
     #print("execute : {}".format(execute))
     try:
         subprocess.call([execute])
