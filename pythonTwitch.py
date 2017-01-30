@@ -4,8 +4,8 @@ import subprocess
 
 sums = []
 def printChannels(query = "dota2"):
-    print("25")
-    streams = v3.search.streams(query, limit = 25, offset = 1 * page)['streams']
+    print(" -- page {} --".format(page + 1))
+    streams = v3.search.streams('dota2', 30, page * 30)['streams']
     for i, stream in enumerate(streams):
     	sum = [i + 1, stream["channel"]["display_name"], stream["viewers"], stream["channel"]["url"]]
     	sums.append(sum)
@@ -13,9 +13,12 @@ def printChannels(query = "dota2"):
     sys.stdout.flush()
 
 def gotoChannel(selection):
+    if (selection < 0 or selection >= len(sums)):
+        return
     selSum = sums[selection]
     print('going to {}'.format(selSum[1]))
     execute = "streamlink np 'omxplayer' twtich.tv/{} best".format(selSum[3]) 
+    #print("execute : {}".format(execute))
     subprocess.call([execute])
 
 page = 0
