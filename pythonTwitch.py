@@ -3,8 +3,9 @@ from twitch.api import v3
 import subprocess
 
 sums = []
-def printChannels():
-    streams = v3.search.streams('dota2')['streams']
+def printChannels(query = "dota2"):
+    print("25")
+    streams = v3.search.streams(query, limit = 25, offset = 1 * page)['streams']
     for i, stream in enumerate(streams):
     	sum = [i + 1, stream["channel"]["display_name"], stream["viewers"], stream["channel"]["url"]]
     	sums.append(sum)
@@ -14,17 +15,24 @@ def printChannels():
 def gotoChannel(selection):
     selSum = sums[selection]
     print('going to {}'.format(selSum[1]))
-    execute = "streamlink np 'omxplayer' twtich.tv/{}".format(selSum[3]) 
+    execute = "streamlink np 'omxplayer' twtich.tv/{} best".format(selSum[3]) 
     subprocess.call([execute])
 
-
-
+page = 0
 usrInupt = ""
 while(usrInupt == ""):
     printChannels()
     usrInput = input(": ")
-    if (usrInput == "q"):
+    if (len(usrInput) == 0):
+        pass
+    elif (usrInput == "q"):
         exit()
+    elif (usrInput[0] == "/"):
+        printChannels(usrInput[1:])
+    elif (usrInput == "n"):
+        page += 1
+    elif (usrInput == "p"):
+        page -= 1 if page > 0 else 0
     else:
         try: 
             gotoChannel(int(usrInput) - 1)
