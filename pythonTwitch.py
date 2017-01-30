@@ -19,7 +19,11 @@ def gotoChannel(selection):
     print('going to {}'.format(selSum[1]))
     execute = "streamlink np 'omxplayer' twtich.tv/{} best".format(selSum[3]) 
     #print("execute : {}".format(execute))
-    subprocess.call([execute])
+    try:
+        subprocess.call([execute])
+    exept ValueError:
+        print("error")
+        print(ValueError)
 
 page = 0
 usrInupt = ""
