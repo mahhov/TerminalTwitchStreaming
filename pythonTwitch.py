@@ -1,6 +1,10 @@
 import sys
-from twitch.api import v3
 import subprocess
+
+try :
+    from twitch.api import v3
+except:
+    print("please sudo pip3 install python-twitch")
 
 sums = []
 def printChannels(query = "dota2"):
