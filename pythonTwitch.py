@@ -21,7 +21,7 @@ def gotoChannel(selection):
     #print("execute : {}".format(execute))
     try:
         subprocess.call([execute])
-    exept ValueError:
+    expect ValueError:
         print("error")
         print(ValueError)
 
