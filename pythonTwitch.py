@@ -25,7 +25,7 @@ def gotoChannel(selection):
     execute = "streamlink -np 'omxplayer' '{}' best".format(selSum[3]) 
     #print("execute : {}".format(execute))
     try:
-        subprocess.call([execute])
+        subprocess.call(execute, shell=True)
     except ValueError:
         print("error")
         print(ValueError)
