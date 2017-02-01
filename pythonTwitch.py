@@ -21,6 +21,7 @@ query = "dota2"
 page = 0
 usrInupt = ""
 debug = False
+mac = True
 
 def printHeader(title):
     print(bcolors.HEADER + title)
@@ -47,9 +48,15 @@ def gotoSum(selection):
     selSum = sums[selection]
     print('going to {}'.format(selSum[1]))
     if (twitch):
-        execute = "streamlink -np 'omxplayer' '{}' best".format(selSum[3]) 
+        if (mac):
+            execute = "streamlink -np 'quicktime player' '{}' best".format(selSum[3]) 
+        else:
+            execute = "streamlink -np 'omxplayer' '{}' best".format(selSum[3]) 
     else:
-        execute = "omxplayer '{}'".format(selSum[3]) 
+        if (mac):
+            execute = "open -a 'quicktime player' '{}'".format(selSum[3])
+        else:
+            execute = "omxplayer '{}'".format(selSum[3])
     if (debug):
         print("execute : {}".format(execute))
     else:
