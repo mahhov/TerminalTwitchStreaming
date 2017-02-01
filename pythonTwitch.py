@@ -1,5 +1,8 @@
 import sys
 import subprocess
+import pafy
+from urllib.request import urlopen
+import json
 try :
     from twitch.api import v3
 except:
@@ -11,15 +14,25 @@ class bcolors:
     LINE2 = '\033[1m\033[0m'
     ENDC = '\033[0m'
 
+key = 'AIzaSyAdkXuGc2f7xJg5FLTWBi2cRUhzAJD-eC0'
+sums = [] # i, name, secondary, url
+twitch = False
+query = "dota2"
+page = 0
+usrInupt = ""
+debug = False
 
-sums = []
-def printChannels(query = "dota2"):
-    print(bcolors.HEADER + " -- page {} --".format(page + 1))
-    print("-"*50)
-    streams = v3.search.streams('dota2', 15, page * 15)['streams']
-    for i, stream in enumerate(streams):
-        sum = [i + 1, stream["channel"]["display_name"], stream["viewers"], stream["channel"]["url"]]
-        sums.append(sum)
+def printHeader(title):
+    print(bcolors.HEADER + title)
+    print(" -- page {} --".format(page + 1))
+    print("-" * 50)
+
+def displaySums():
+    if (twitch):
+        printHeader("TWITCH")
+    else:
+        printHeader("YOUTUBE")
+    for i, sum in enumerate(sums):
         if (i % 2 == 0):
             print(bcolors.LINE1, end="")
         else:
@@ -28,36 +41,79 @@ def printChannels(query = "dota2"):
     print(bcolors.ENDC)
     sys.stdout.flush()
 
-def gotoChannel(selection):
+def gotoSum(selection):
     if (selection < 0 or selection >= len(sums)):
         return
     selSum = sums[selection]
     print('going to {}'.format(selSum[1]))
-    execute = "streamlink -np 'omxplayer' '{}' best".format(selSum[3]) 
-    #print("execute : {}".format(execute))
-    try:
-        subprocess.call(execute, shell=True)
-    except ValueError:
-        print("error")
-        print(ValueError)
-
-page = 0
-usrInupt = ""
-while(usrInupt == ""):
-    printChannels()
-    usrInput = input(": ")
-    if (len(usrInput) == 0):
-        pass
-    elif (usrInput == "q"):
-        exit()
-    elif (usrInput[0] == "/"):
-        printChannels(usrInput[1:])
-    elif (usrInput == "n"):
-        page += 1
-    elif (usrInput == "p"):
-        page -= 1 if page > 0 else 0
+    if (twitch):
+        execute = "streamlink -np 'omxplayer' '{}' best".format(selSum[3]) 
     else:
-        try: 
-            gotoChannel(int(usrInput) - 1)
+        execute = "omxplayer '{}'".format(selSum[3]) 
+    if (debug):
+        print("execute : {}".format(execute))
+    else:
+        try:
+            subprocess.call(execute, shell=True)
         except ValueError:
+            print("error")
+            print(ValueError)
+
+def getTwitchChannels():
+    streams = v3.search.streams(query, 15, page * 15)['streams']
+    for i, stream in enumerate(streams):
+        sum = [i + 1, stream["channel"]["display_name"], stream["viewers"], stream["channel"]["url"]]
+        sums.append(sum)
+
+def getYoutubeChannels():
+    resp = urlopen("https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&key="+key+"&q="+query)
+    respRead = resp.read()
+    respObj = json.loads(respRead)
+    for i, item in enumerate(respObj['items']):
+        code = item['id']['videoId']
+        video = pafy.new(code)
+        sum = [i + 1, video.title, video.duration, video.getbest().url]
+        sums.append(sum)
+
+def makeQuery():
+    if (twitch):
+        getTwitchChannels()
+    else:
+        getYoutubeChannels()
+
+def main():
+    makeQuery()
+    displaySums()
+    while(usrInupt == ""):
+        usrInput = input(": ")
+        if (len(usrInput) == 0):
             pass
+        elif (usrInput == "q"):
+            exit()
+        elif (usrInput == "t"):
+            twitch == True
+            page = 0
+            query = usrInput[1:]
+            makeQuery()
+        elif (usrInput == "y"):
+            twitch == False
+            page = 0
+            query = usrInput[1:]
+            makeQuery()
+        elif (usrInput[0] == "/"):
+            query = usrInput[1:]
+            makeQuery()
+        elif (usrInput == "n"):
+            page += 1
+        elif (usrInput == "p"):
+            page -= 1 if page > 0 else 0
+        elif (usrInput == "r"):
+            makeQuery()
+        else:
+            try: 
+                gotoSum(int(usrInput) - 1)
+            except ValueError:
+                pass
+        displaySums()
+
+main()
