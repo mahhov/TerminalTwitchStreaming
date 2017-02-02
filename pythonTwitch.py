@@ -69,6 +69,7 @@ def gotoSum(selection):
             print(ValueError)
 
 def getTwitchChannels():
+    global sums
     sums = []
     streams = v3.search.streams(query, 15, page * 15)['streams']
     for i, stream in enumerate(streams):
@@ -78,10 +79,10 @@ def getTwitchChannels():
         sums.append([i + 1, title, viewers, streamUrl])
 
 def getYoutubeChannels():
+    global sums
     sums = []
     search = json.loads(urlopen("https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&key="+key+"&q="+query).read())
     for i, item in enumerate(search['items']):
-        print(item)
         code = item['id']['videoId']
         title = item['snippet']['title']
         details = json.loads(urlopen("https://www.googleapis.com/youtube/v3/videos?part=contentDetails&key="+key+"&id="+code).read())
