@@ -110,12 +110,18 @@ def main():
         elif (usrInput == "t"):
             twitch = True
             page = 0
-            query = usrInput[1:]
+        elif (usrInput[0:2] == "t ")
+            twitch = True
+            page = 0
+            query = usrInput[2:]
             makeQuery()
         elif (usrInput == "y"):
             twitch = False
             page = 0
-            query = usrInput[1:]
+        elif (usrInput[0:2] == "y ")
+            twitch = False
+            page = 0
+            query = usrInput[2:]
             makeQuery()
         elif (usrInput[0] == "/"):
             query = usrInput[1:]
