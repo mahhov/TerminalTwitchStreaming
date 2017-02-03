@@ -18,7 +18,7 @@ key = 'AIzaSyAdkXuGc2f7xJg5FLTWBi2cRUhzAJD-eC0'
 sums = [] # i, name, secondary, url
 twitch = False
 query = "testquery"
-page = 0
+page = [0, 0, 0, 0]
 usrInupt = ""
 debug = False
 mac = True
@@ -26,7 +26,7 @@ showDuration = False
 
 def printHeader(title):
     print(bcolors.HEADER + title)
-    print(" -- page {} --".format(page + 1))
+    print(" -- page {} --".format(page[0] + 1))
     print("-" * 50)
 
 def displaySums():
@@ -70,7 +70,7 @@ def gotoSum(selection):
             print(ValueError)
 
 def getTwitchChannels():
-    streams = v3.search.streams(query, 15, page * 15)['streams']
+    streams = v3.search.streams(query, 15, page[0] * 15)['streams']
     for i, stream in enumerate(streams):
         title = stream["channel"]["display_name"]
         viewers = stream["viewers"]
@@ -93,8 +93,14 @@ def parseYoutubeDuration(duration):
         return duration[:hMark] + ":" + duration[hMark + 1 : mMark] + ":" + duration[mMark + 1:]
 
 def getYoutubeChannels():
+    global page
     spaceQuery = query.replace(' ', '+')
-    search = youtubeUrlRequest('search', 'part=snippet&type=video&maxResults=25&q=' + spaceQuery)
+    if (page[0] == 0):
+        search = youtubeUrlRequest('search', 'part=snippet&type=video&maxResults=25&q=' + spaceQuery)
+    else:
+        search = youtubeUrlRequest('search', 'part=snippet&type=video&maxResults=25&q=' + spaceQuery + "&pageToken=" + page[1])
+    page[2] = search['prevPageToken'] if 'prevPageToken' in search else 0
+    page[3] = search['nextPageToken']
     for i, item in enumerate(search['items']):
         code = item['id']['videoId']
         title = item['snippet']['title']
@@ -113,6 +119,18 @@ def makeQuery():
     else:
         getYoutubeChannels()
 
+def changePage(v):
+    global page
+    if (page[0] + v >= 0):
+        page[0] += v
+        if (not twitch):
+            if (v == 1):
+                page[1] = page[3]
+            else:
+                page[1] = page[2]
+    makeQuery()
+
+
 def printHelp():
     print(" -- HELP PAGE -- ")
     print("q         : quit")
@@ -121,8 +139,8 @@ def printHelp():
     print("y         : switch to youtube")
     print("y <query> : switch to and search youtube")
     print("/<query>  : search")
-    print("n         : next page (twitch only)")
-    print("p         : previous page (twitch only)")
+    print("n         : next page")
+    print("p         : previous page")
     print("r         : refresh search")
     print("d         : toggle duration display (youtube only)")
     print("h         : help")
@@ -140,29 +158,29 @@ def main():
             exit()
         elif (usrInput == "t"):
             twitch = True
-            page = 0
+            page = [0, 0, 0, 0]
             makeQuery()
         elif (usrInput[0:2] == "t "):
             twitch = True
-            page = 0
+            page = [0, 0, 0, 0]
             query = usrInput[2:]
             makeQuery()
         elif (usrInput == "y"):
             twitch = False
-            page = 0
+            page = [0, 0, 0, 0]
             makeQuery()
         elif (usrInput[0:2] == "y "):
             twitch = False
-            page = 0
+            page = [0, 0, 0, 0]
             query = usrInput[2:]
             makeQuery()
         elif (usrInput[0] == "/"):
             query = usrInput[1:]
             makeQuery()
         elif (usrInput == "n"):
-            page += 1
+            changePage(1)
         elif (usrInput == "p"):
-            page -= 1 if page > 0 else 0
+            changePage(-1)
         elif (usrInput == "r"):
             makeQuery()
         elif (usrInput == "d"):
@@ -179,5 +197,4 @@ def main():
 main()
 
 # showDuration levels
-# yt page swapping
-# help screen
+# go to page #
