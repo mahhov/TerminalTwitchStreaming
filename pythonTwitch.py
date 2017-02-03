@@ -17,11 +17,12 @@ class bcolors:
 key = 'AIzaSyAdkXuGc2f7xJg5FLTWBi2cRUhzAJD-eC0'
 sums = [] # i, name, secondary, url
 twitch = False
-query = "dota2"
+query = "testquery"
 page = 0
 usrInupt = ""
 debug = False
 mac = True
+showDuration = False
 
 def printHeader(title):
     print(bcolors.HEADER + title)
@@ -97,7 +98,7 @@ def getYoutubeChannels():
     for i, item in enumerate(search['items']):
         code = item['id']['videoId']
         title = item['snippet']['title']
-        if (i < 2):
+        if (showDuration and i < 5):
             details = youtubeUrlRequest('videos', 'part=contentDetails&id=' + code)
             duration = parseYoutubeDuration(details['items'][0]['contentDetails']['duration'])
         else:
@@ -113,7 +114,7 @@ def makeQuery():
         getYoutubeChannels()
 
 def main():
-    global twitch, page, query
+    global twitch, page, query, showDuration
     makeQuery()
     displaySums()
     while(usrInupt == ""):
@@ -149,6 +150,8 @@ def main():
             page -= 1 if page > 0 else 0
         elif (usrInput == "r"):
             makeQuery()
+        elif (usrInput == "d"):
+            showDuration = not showDuration
         else:
             try: 
                 gotoSum(int(usrInput) - 1)
@@ -158,7 +161,6 @@ def main():
 
 main()
 
-# youtube mroe than 5 resualts
+# showDuration levels
 # yt page swapping
-# faster yt
 # help screen
