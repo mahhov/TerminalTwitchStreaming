@@ -16,7 +16,7 @@ class bcolors:
 
 key = 'AIzaSyAdkXuGc2f7xJg5FLTWBi2cRUhzAJD-eC0'
 sums = [] # i, name, secondary, url
-twitch = False
+twitch = True
 query = "dota2"
 page = 0
 usrInupt = ""
@@ -38,7 +38,7 @@ def displaySums():
             print(bcolors.LINE1, end="")
         else:
             print(bcolors.LINE2, end="")
-        print("{:4}:   {:50.50}  ({})".format(sum[0], sum[1], sum[2]))
+        print("{:4}:   {:80.80}  ({})".format(sum[0], sum[1], sum[2]))
     print(bcolors.ENDC)
     sys.stdout.flush()
 
@@ -69,8 +69,6 @@ def gotoSum(selection):
             print(ValueError)
 
 def getTwitchChannels():
-    global sums
-    sums = []
     streams = v3.search.streams(query, 15, page * 15)['streams']
     for i, stream in enumerate(streams):
         title = stream["channel"]["display_name"]
@@ -79,8 +77,6 @@ def getTwitchChannels():
         sums.append([i + 1, title, viewers, streamUrl])
 
 def getYoutubeChannels():
-    global sums
-    sums = []
     search = json.loads(urlopen("https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&key="+key+"&q="+query).read())
     for i, item in enumerate(search['items']):
         code = item['id']['videoId']
@@ -102,6 +98,7 @@ def getYoutubeChannels():
         sums.append([i + 1, title, duration, code])
 
 def makeQuery():
+    global sums
     sums = []
     if (twitch):
         getTwitchChannels()
@@ -121,6 +118,7 @@ def main():
         elif (usrInput == "t"):
             twitch = True
             page = 0
+            makeQuery()
         elif (usrInput[0:2] == "t "):
             twitch = True
             page = 0
@@ -129,6 +127,7 @@ def main():
         elif (usrInput == "y"):
             twitch = False
             page = 0
+            makeQuery()
         elif (usrInput[0:2] == "y "):
             twitch = False
             page = 0
