@@ -76,13 +76,17 @@ def getTwitchChannels():
         streamUrl = stream["channel"]["url"]
         sums.append([i + 1, title, viewers, streamUrl])
 
+def urlRequest(url):
+    return json.loads(urlopen(url).read())
+
 def getYoutubeChannels():
-    search = json.loads(urlopen("https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&key="+key+"&q="+query).read())
+    spaceQuery = query.replace(' ', '+')
+    search = urlRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&key="+key+"&q="+spaceQuery)
     for i, item in enumerate(search['items']):
         code = item['id']['videoId']
         title = item['snippet']['title']
         if (i < 2):
-            details = json.loads(urlopen("https://www.googleapis.com/youtube/v3/videos?part=contentDetails&key="+key+"&id="+code).read())
+            details = urlRequest("https://www.googleapis.com/youtube/v3/videos?part=contentDetails&key="+key+"&id="+code)
             duration = details['items'][0]['contentDetails']['duration'][2:]
             if (duration.find('M')  == - 1):
                 duration = "0:0:" + duration[:-1]
@@ -152,6 +156,5 @@ def main():
 main()
 
 # search with multi words
-# duration display formatting
 # youtube mroe than 5 resualts
 # faster yt
