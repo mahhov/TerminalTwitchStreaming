@@ -16,7 +16,7 @@ class bcolors:
 
 key = 'AIzaSyAdkXuGc2f7xJg5FLTWBi2cRUhzAJD-eC0'
 sums = [] # i, name, secondary, url
-twitch = True
+twitch = False
 query = "dota2"
 page = 0
 usrInupt = ""
@@ -76,27 +76,30 @@ def getTwitchChannels():
         streamUrl = stream["channel"]["url"]
         sums.append([i + 1, title, viewers, streamUrl])
 
-def urlRequest(url):
-    return json.loads(urlopen(url).read())
+def youtubeUrlRequest(type, params):
+    return json.loads(urlopen('https://www.googleapis.com/youtube/v3/' + type + '?key=' + key + '&' + params).read())
+
+def parseYoutubeDuration(duration):
+    duration = duration[2:]
+    if (duration.find('M')  == - 1):
+        return "0:0:" + duration[:-1]
+    elif (duration.find('H') == -1):
+        mMark = duration.find('M')
+        return "0:" + duration[:mMark] + ":" + duration[mMark + 1:]
+    else:
+        hMark = duration.find('H')
+        mMark = duration.find('M')
+        return duration[:hMark] + ":" + duration[hMark + 1 : mMark] + ":" + duration[mMark + 1:]
 
 def getYoutubeChannels():
     spaceQuery = query.replace(' ', '+')
-    search = urlRequest("https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&key="+key+"&q="+spaceQuery)
+    search = youtubeUrlRequest('search', 'part=snippet&type=video&maxResults=25&q=' + spaceQuery)
     for i, item in enumerate(search['items']):
         code = item['id']['videoId']
         title = item['snippet']['title']
         if (i < 2):
-            details = urlRequest("https://www.googleapis.com/youtube/v3/videos?part=contentDetails&key="+key+"&id="+code)
-            duration = details['items'][0]['contentDetails']['duration'][2:]
-            if (duration.find('M')  == - 1):
-                duration = "0:0:" + duration[:-1]
-            elif (duration.find('H') == -1):
-                mMark = duration.find('M')
-                duration = "0:" + duration[:mMark] + ":" + duration[mMark + 1:]
-            else:
-                hMark = duration.find('H')
-                mMark = duration.find('M')
-                duration = duration[:hMark] + ":" + duration[hMark + 1 : mMark] + ":" + duration[mMark + 1:]
+            details = youtubeUrlRequest('videos', 'part=contentDetails&id=' + code)
+            duration = parseYoutubeDuration(details['items'][0]['contentDetails']['duration'])
         else:
             duration = 0
         sums.append([i + 1, title, duration, code])
@@ -155,6 +158,7 @@ def main():
 
 main()
 
-# search with multi words
 # youtube mroe than 5 resualts
+# yt page swapping
 # faster yt
+# help screen
