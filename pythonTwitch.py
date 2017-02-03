@@ -113,6 +113,21 @@ def makeQuery():
     else:
         getYoutubeChannels()
 
+def printHelp():
+    print(" -- HELP PAGE -- ")
+    print("q         : quit")
+    print("t         : switch to twitch")
+    print("t <query> : switch to and search twitch")
+    print("y         : switch to youtube")
+    print("y <query> : switch to and search youtube")
+    print("/<query>  : search")
+    print("n         : next page (twitch only)")
+    print("p         : previous page (twitch only)")
+    print("r         : refresh search")
+    print("d         : toggle duration display (youtube only)")
+    print("h         : help")
+    print("")
+
 def main():
     global twitch, page, query, showDuration
     makeQuery()
@@ -152,6 +167,8 @@ def main():
             makeQuery()
         elif (usrInput == "d"):
             showDuration = not showDuration
+        elif (usrInput == "h"):
+            printHelp()
         else:
             try: 
                 gotoSum(int(usrInput) - 1)
