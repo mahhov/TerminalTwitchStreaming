@@ -38,7 +38,7 @@ def displaySums():
             print(bcolors.LINE1, end="")
         else:
             print(bcolors.LINE2, end="")
-        print("{:4}:   {:20}  ({})".format(sum[0], sum[1], sum[2]))
+        print("{:4}:   {:50.50}  ({})".format(sum[0], sum[1], sum[2]))
     print(bcolors.ENDC)
     sys.stdout.flush()
 
@@ -85,9 +85,20 @@ def getYoutubeChannels():
     for i, item in enumerate(search['items']):
         code = item['id']['videoId']
         title = item['snippet']['title']
-        details = json.loads(urlopen("https://www.googleapis.com/youtube/v3/videos?part=contentDetails&key="+key+"&id="+code).read())
-        duration = details['items'][0]['contentDetails']['duration']
-        # video = pafy.new(code, basic = False) # video.getbest().url]
+        if (i < 2):
+            details = json.loads(urlopen("https://www.googleapis.com/youtube/v3/videos?part=contentDetails&key="+key+"&id="+code).read())
+            duration = details['items'][0]['contentDetails']['duration'][2:]
+            if (duration.find('M')  == - 1):
+                duration = "0:0:" + duration[:-1]
+            elif (duration.find('H') == -1):
+                mMark = duration.find('M')
+                duration = "0:" + duration[:mMark] + ":" + duration[mMark + 1:]
+            else:
+                hMark = duration.find('H')
+                mMark = duration.find('M')
+                duration = duration[:hMark] + ":" + duration[hMark + 1 : mMark] + ":" + duration[mMark + 1:]
+        else:
+            duration = 0
         sums.append([i + 1, title, duration, code])
 
 def makeQuery():
@@ -140,3 +151,8 @@ def main():
         displaySums()
 
 main()
+
+# search with multi words
+# duration display formatting
+# youtube mroe than 5 resualts
+# faster yt
