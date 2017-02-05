@@ -21,7 +21,7 @@ query = "dota2"
 page = [0, 0, 0, 0]
 usrInupt = ""
 debug = False
-mac = True
+mac = False
 showDuration = False
 
 def printHeader(title):
@@ -53,7 +53,7 @@ def gotoSum(selection):
         if (mac):
             execute = "streamlink -np 'quicktime player' '{}' best".format(vid) 
         else:
-            execute = "streamlink -np 'omxplayer' '{}' best".format(vid) 
+            execute = "streamlink -np 'omxplayer' '{}' high".format(vid) 
     else:
         vid = pafy.new(selSum[3]).getbest().url
         if (mac):
