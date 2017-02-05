@@ -16,8 +16,8 @@ class bcolors:
 
 key = 'AIzaSyAdkXuGc2f7xJg5FLTWBi2cRUhzAJD-eC0'
 sums = [] # i, name, secondary, url
-twitch = False
-query = "testquery"
+twitch = True
+query = "dota2"
 page = [0, 0, 0, 0]
 usrInupt = ""
 debug = False
@@ -39,7 +39,7 @@ def displaySums():
             print(bcolors.LINE1, end="")
         else:
             print(bcolors.LINE2, end="")
-        print("{:4}:   {:80.80}  ({})".format(sum[0], sum[1], sum[2]))
+        print("{:4}:   {:60.60}  ({})".format(sum[0], sum[1], sum[2]))
     print(bcolors.ENDC)
     sys.stdout.flush()
 
@@ -78,7 +78,7 @@ def getTwitchChannels():
         sums.append([i + 1, title, viewers, streamUrl])
 
 def youtubeUrlRequest(type, params):
-    return json.loads(urlopen('https://www.googleapis.com/youtube/v3/' + type + '?key=' + key + '&' + params).read())
+    return json.loads(urlopen('https://www.googleapis.com/youtube/v3/' + type + '?key=' + key + '&' + params).read().decode('utf-8'))
 
 def parseYoutubeDuration(duration):
     duration = duration[2:]
@@ -198,3 +198,7 @@ main()
 
 # showDuration levels
 # go to page #
+#twitch streaming green screen
+#youtube json parse (fixed?)
+#jpeg / screenshots
+# subprocess exit
