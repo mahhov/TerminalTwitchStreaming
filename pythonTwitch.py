@@ -96,9 +96,9 @@ def getYoutubeChannels():
     global page
     spaceQuery = query.replace(' ', '+')
     if (page[0] == 0):
-        search = youtubeUrlRequest('search', 'part=snippet&type=video&maxResults=25&q=' + spaceQuery)
+        search = youtubeUrlRequest('search', 'part=snippet&type=video&maxResults=15&q=' + spaceQuery)
     else:
-        search = youtubeUrlRequest('search', 'part=snippet&type=video&maxResults=25&q=' + spaceQuery + "&pageToken=" + page[1])
+        search = youtubeUrlRequest('search', 'part=snippet&type=video&maxResults=15&q=' + spaceQuery + "&pageToken=" + page[1])
     page[2] = search['prevPageToken'] if 'prevPageToken' in search else 0
     page[3] = search['nextPageToken']
     for i, item in enumerate(search['items']):
