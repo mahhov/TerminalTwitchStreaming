@@ -3,10 +3,14 @@ import subprocess
 import pafy
 from urllib.request import urlopen
 import json
-try :
+try:
     from twitch.api import v3
 except:
     print("please sudo pip3 install python-twitch")
+try:
+    import streamlink
+except:
+    print('streamlink failed to import')
 
 class bcolors:
     HEADER = '\033[1m\033[93m'
@@ -43,17 +47,30 @@ def displaySums():
     print(bcolors.ENDC)
     sys.stdout.flush()
 
-def gotoSum(selection):
+def gotoSum(selection, askOptions = false):
     if (selection < 0 or selection >= len(sums)):
         return
     selSum = sums[selection]
     print('going to {}'.format(selSum[1]))
     if (twitch):
         vid = selSum[3]
-        if (mac):
-            execute = "streamlink -np 'quicktime player' '{}' best".format(vid) 
-        else:
-            execute = "streamlink -np 'omxplayer' '{}' high".format(vid) 
+        if (askOptions):
+            options = streamlink.streams(vid)
+            prompt = ""
+            for key in options.keys():
+                prompt += key + " "
+            print(prompt)
+            option = input(": ")
+            optionVid = options[option].url
+            if (mac):
+                execute = "open -a 'quicktime player' '{}'".format(optionVid)
+            else:
+                execute = "omxplayer '{}'".format(optionVid)
+        else:    
+            if (mac):
+                execute = "streamlink -np 'quicktime player' '{}' best".format(vid)
+            else:
+                execute = "streamlink -np 'omxplayer' '{}' high".format(vid) 
     else:
         vid = pafy.new(selSum[3]).getbest().url
         if (mac):
@@ -143,6 +160,7 @@ def printHelp():
     print("p         : previous page")
     print("r         : refresh search")
     print("d         : toggle duration display (youtube only)")
+    print("o         : show stream options (twitch only)")
     print("h         : help")
     print("")
 
@@ -187,6 +205,11 @@ def main():
             showDuration = not showDuration
         elif (usrInput == "h"):
             printHelp()
+        elif (uuserInput[0:1] == "o" and twitch)
+            try: 
+                gotoSum(int(usrInput[1:]) - 1, true)
+            except ValueError:
+                pass
         else:
             try: 
                 gotoSum(int(usrInput) - 1)
