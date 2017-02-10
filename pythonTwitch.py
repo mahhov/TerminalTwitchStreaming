@@ -25,7 +25,7 @@ query = "dota2"
 page = [0, 0, 0, 0]
 usrInupt = ""
 debug = False
-mac = False
+mac = True
 showDuration = False
 
 def printHeader(title):
@@ -47,7 +47,7 @@ def displaySums():
     print(bcolors.ENDC)
     sys.stdout.flush()
 
-def gotoSum(selection, askOptions = false):
+def gotoSum(selection, askOptions = False):
     if (selection < 0 or selection >= len(sums)):
         return
     selSum = sums[selection]
@@ -205,9 +205,9 @@ def main():
             showDuration = not showDuration
         elif (usrInput == "h"):
             printHelp()
-        elif (uuserInput[0:1] == "o" and twitch)
+        elif (usrInput[0:1] == "o" and twitch):
             try: 
-                gotoSum(int(usrInput[1:]) - 1, true)
+                gotoSum(int(usrInput[1:]) - 1, True)
             except ValueError:
                 pass
         else:
