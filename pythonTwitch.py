@@ -25,7 +25,7 @@ query = "dota2"
 page = [0, 0, 0, 0]
 usrInupt = ""
 debug = False
-mac = True
+mac = False
 showDuration = False
 
 def printHeader(title):
