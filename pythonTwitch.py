@@ -6,11 +6,11 @@ import json
 try:
     from twitch.api import v3
 except:
-    print("please sudo pip3 install python-twitch")
+    print('please sudo pip3 install python-twitch')
 try:
     import streamlink
 except:
-    print('streamlink failed to import')
+    print('please sudo pip3 install streamlink')
 
 class bcolors:
     HEADER = '\033[1m\033[93m'
@@ -70,7 +70,7 @@ def gotoSum(selection, askOptions = False):
             if (mac):
                 execute = "streamlink -np 'quicktime player' '{}' best".format(vid)
             else:
-                execute = "streamlink -np 'omxplayer' '{}' high".format(vid) 
+                execute = "streamlink -np 'omxplayer' '{}' best".format(vid) 
     else:
         vid = pafy.new(selSum[3]).getbest().url
         if (mac):
