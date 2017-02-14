@@ -153,8 +153,10 @@ def printHelp():
     print("q         : quit")
     print("t         : switch to twitch")
     print("t <query> : switch to and search twitch")
+    print("td        : switch to twitch and search 'dota2'")
     print("y         : switch to youtube")
     print("y <query> : switch to and search youtube")
+    print("yd        : switch to youtube and search 'dota2 beyond the summit 2017'")
     print("/<query>  : search")
     print("n         : next page")
     print("p         : previous page")
@@ -183,6 +185,11 @@ def main():
             page = [0, 0, 0, 0]
             query = usrInput[2:]
             makeQuery()
+        elif (usrInput == "td"):
+            twitch = True
+            page = [0, 0, 0, 0]
+            query = "dota2"
+            makeQuery()    
         elif (usrInput == "y"):
             twitch = False
             page = [0, 0, 0, 0]
@@ -191,6 +198,11 @@ def main():
             twitch = False
             page = [0, 0, 0, 0]
             query = usrInput[2:]
+            makeQuery()
+        elif (usrInput == "yd"):
+            twitch = False
+            page = [0, 0, 0, 0]
+            query = "dota2 beyond the summit 2017"
             makeQuery()
         elif (usrInput[0] == "/"):
             query = usrInput[1:]
