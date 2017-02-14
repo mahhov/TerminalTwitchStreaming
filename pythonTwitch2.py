@@ -33,7 +33,7 @@ query = "dota2"
 page = [0, 0, 0, 0]
 usrInupt = ""
 debug = False
-mac = False
+mac = True
 showDuration = False
 
 def printHeader(title):
@@ -48,9 +48,9 @@ def displaySums():
         printHeader("YOUTUBE")
     for i, sum in enumerate(sums):
         if (i % 2 == 0):
-            print(bcolors.LINE1,)
+            print bcolors.LINE1,
         else:
-            print(bcolors.LINE2,)
+            print bcolors.LINE2,
         print("{:4}:   {:60.60}  ({})".format(sum[0], sum[1], sum[2]))
     print(bcolors.ENDC)
     sys.stdout.flush()
@@ -68,7 +68,7 @@ def gotoSum(selection, askOptions = False):
             for key in options.keys():
                 prompt += key + " "
             print(prompt)
-            option = input(": ")
+            option = raw_input(": ")
             optionVid = options[option].url
             if (mac):
                 execute = "open -a 'quicktime player' '{}'".format(optionVid)
@@ -177,7 +177,7 @@ def main():
     makeQuery()
     displaySums()
     while(usrInupt == ""):
-        usrInput = input(": ")
+        usrInput = raw_input(": ")
         if (len(usrInput) == 0):
             pass
         elif (usrInput == "q"):
