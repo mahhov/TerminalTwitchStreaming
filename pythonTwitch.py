@@ -20,12 +20,12 @@ class bcolors:
 
 key = 'AIzaSyAdkXuGc2f7xJg5FLTWBi2cRUhzAJD-eC0'
 sums = [] # i, name, secondary, url
-twitch = True
+twitch = False
 query = "dota2"
 page = [0, 0, 0, 0]
 usrInupt = ""
 debug = False
-mac = False
+mac = True
 showDuration = False
 
 def printHeader(title):
