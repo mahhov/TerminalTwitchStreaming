@@ -6,9 +6,9 @@ import glob
 import re
 
 key = 'AIzaSyAdkXuGc2f7xJg5FLTWBi2cRUhzAJD-eC0'
-# playlistId = "PLameShrvoeYfp54xeNPK1fGxd2a7IzqU2"
-playlistId = "PLameShrvoeYfzOWuBX2bbER0LXD9EuxGx"
-playlistTitle = "arm muzik"
+playlistId = "PLameShrvoeYfp54xeNPK1fGxd2a7IzqU2"
+#playlistId = "PLameShrvoeYfzOWuBX2bbER0LXD9EuxGx"
+playlistTitle = "muzik2"
 query = ""
 sums = []
 searchResaults = []
