@@ -20,10 +20,10 @@ def youtubeSearch(query):
 
 def youtubeSearchPlaylists(query):
     return youtubeSearch('search?key=' + key + '&part=snippet&maxResults=20&type=playlist&q=' + query)
-    
+
 def youtubeSearchPlaylistItems(playlistId, page):
     return youtubeSearch('playlistItems?key=' + key + '&part=snippet&maxResults=50&playlistId=' + playlistId + '&pageToken=' + page)
-    
+
 def makeQueryOnePage(playlistId, page):
     global sums, totalItems
     search = youtubeSearchPlaylistItems(playlistId, page)
@@ -34,7 +34,7 @@ def makeQueryOnePage(playlistId, page):
         sums.append([videoId, title])
     if ('nextPageToken' in search):
         return search['nextPageToken']
-    
+
 def makeQuery():
     global sums
     sums = []
@@ -70,7 +70,7 @@ def downloadPlaylist(video):
     for i, sum in enumerate(sums):
         try:
             fileName = re.sub('[^a-zA-Z0-9 ]', '', sum[1])
-            fileFound = glob.glob(playlistTitle + '/' + fileName + '.*')
+            fileFound = glob.glob(playlistTitle + '/**/' + fileName + '.*', recursive = True)
             if (fileFound):
                 downloadPrinter('skipped', i, sum)
             else:
@@ -89,7 +89,7 @@ def downloadPlaylist(video):
     print("=" * 10 + "  {:5} failed  ".format(len(failed)) + "=" * 10)
     for fail in failed:
         downloadPrinter('failed', fail[0], fail[1])
-    
+
 def displayPlaylist():
     print("=" * 100)
     print("title {:30.30}".format(playlistTitle))
@@ -99,7 +99,7 @@ def displayPlaylist():
     print("query {:20.20}".format(query))
     for i, item in enumerate(searchResaults):
         print("{:3} :: {:30.30}".format(i + 1, item[0]))
-    
+
 def printHelp():
     print(" -- HELP PAGE -- ")
     print("q         : quit")
@@ -132,7 +132,7 @@ def main():
         elif (usrInput == "v"):
             downloadPlaylist(True)
         else:
-            try: 
+            try:
                 selectResault(int(usrInput) - 1)
             except ValueError:
                 pass
