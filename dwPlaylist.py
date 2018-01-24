@@ -69,10 +69,12 @@ def downloadPlaylist(video):
     failed = []
     for i, sum in enumerate(sums):
         try:
-            fileName = re.sub('[^a-zA-Z0-9 ]', '', sum[1])
+            fileName = re.sub('[^a-zA-Z0-9 ]', '', sum[1]) + sum[0]
+            print(sum[1])
+            print(fileName)
             fileFound = glob.glob(playlistTitle + '/**/' + fileName + '.*', recursive = True)
             if (fileFound):
-                downloadPrinter('skipped', i, sum)
+                downloadPrinter('skipped', i, fileName)
             else:
                 downloadPrinter('downloading', i, sum)
                 p = pafy.new(sum[0])
@@ -80,7 +82,11 @@ def downloadPlaylist(video):
                     p.getbest().download(playlistTitle)
                 else:
                     s = p.getbestaudio()
-                    s.download(playlistTitle + '/' + fileName + '.' + s.extension)
+                    dir = playlistTitle + '/group_' + str(int(i / 250))
+                    if not os.path.exists(dir):
+                        os.makedirs(dir)
+                    fullName = dir + '/' + fileName + '.' + s.extension
+                    s.download(fullName)
         except (KeyboardInterrupt, SystemExit):
             raise
         except:
